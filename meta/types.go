@@ -116,6 +116,10 @@ type CreateComponentRequest struct {
 	BundleFileId string         `json:"bundle_file_id,omitempty"`
 	SourceFileId string         `json:"source_file_id,omitempty"`
 	PropsSchema  map[string]any `json:"props_schema,omitempty"`
+	// IsPublic opts the compiled bundle into UNAUTHENTICATED serving (public
+	// pages may only reference public components). Manifest-driven full
+	// replacement: a deploy without the field sets false.
+	IsPublic bool `json:"is_public"`
 }
 
 type UpdateComponentRequest struct {
