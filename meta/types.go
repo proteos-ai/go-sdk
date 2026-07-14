@@ -34,22 +34,28 @@ type ListEntitiesOptions struct {
 }
 
 type CreateEntityRequest struct {
-	Slug          string                `json:"slug"`
-	Name          string                `json:"name"`
-	IsRemote      bool                  `json:"is_remote"`
-	ModuleSlug    string                `json:"module_slug"`
-	Description   string                `json:"description"`
-	TitleTemplate string                `json:"title_template"`
-	Attributes    []metamodel.Attribute `json:"attributes"`
+	Slug     string `json:"slug"`
+	Name     string `json:"name"`
+	IsRemote bool   `json:"is_remote"`
+	// PublicRecordAccess opts all records of the entity into unauthenticated
+	// access via /data/v1/public/... (only ["read"] honored today).
+	// Full-replacement on upsert: an upsert without the field resets it to
+	// private.
+	PublicRecordAccess common.PublicAccess   `json:"public_record_access"`
+	ModuleSlug         string                `json:"module_slug"`
+	Description        string                `json:"description"`
+	TitleTemplate      string                `json:"title_template"`
+	Attributes         []metamodel.Attribute `json:"attributes"`
 }
 
 type UpdateEntityRequest struct {
-	Name          *string                `json:"name,omitempty"`
-	IsRemote      *bool                  `json:"is_remote,omitempty"`
-	ModuleSlug    *string                `json:"module_slug,omitempty"`
-	Description   *string                `json:"description,omitempty"`
-	TitleTemplate *string                `json:"title_template,omitempty"`
-	Attributes    *[]metamodel.Attribute `json:"attributes,omitempty"`
+	Name               *string                `json:"name,omitempty"`
+	IsRemote           *bool                  `json:"is_remote,omitempty"`
+	PublicRecordAccess *common.PublicAccess   `json:"public_record_access,omitempty"`
+	ModuleSlug         *string                `json:"module_slug,omitempty"`
+	Description        *string                `json:"description,omitempty"`
+	TitleTemplate      *string                `json:"title_template,omitempty"`
+	Attributes         *[]metamodel.Attribute `json:"attributes,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -263,4 +269,40 @@ type UpdateAppRequest struct {
 	Name        *string `json:"name,omitempty"`
 	Description *string `json:"description,omitempty"`
 	IconSlug    *string `json:"icon_slug,omitempty"`
+}
+
+// ----------------------------------------------------------------------
+// DesignReference
+
+type ListDesignReferencesOptions struct {
+	ListOptions
+	ID          string `query:"id,omitempty"`
+	Slug        string `query:"slug,omitempty"`
+	Name        string `query:"name,omitempty"`
+	Description string `query:"description,omitempty"`
+}
+
+type CreateDesignReferenceRequest struct {
+	Slug        string `json:"slug"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	// Content optionally seeds the DESIGN.md body at create time; omitempty so a
+	// metadata-only create doesn't send an empty body. Edit later via SetContent.
+	Content string `json:"content,omitempty"`
+}
+
+type UpdateDesignReferenceRequest struct {
+	Slug        *string `json:"slug,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+// SetDesignReferenceContentRequest is the body of PUT /design-references/:id/content.
+type SetDesignReferenceContentRequest struct {
+	Content string `json:"content"`
+}
+
+// DesignReferenceContentResponse is the body of GET /design-references/:id/content.
+type DesignReferenceContentResponse struct {
+	Content string `json:"content"`
 }

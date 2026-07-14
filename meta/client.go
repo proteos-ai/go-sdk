@@ -17,6 +17,7 @@ type Client struct {
 	Pages              *PageService
 	MenuConfigurations *MenuConfigurationService
 	Apps               *AppService
+	DesignReferences   *DesignReferenceService
 }
 
 // New builds a Client backed by the given *sdk.Client.
@@ -31,5 +32,6 @@ func New(c *sdk.Client) *Client {
 		Pages:              &PageService{c: c},
 		MenuConfigurations: &MenuConfigurationService{c: c},
 		Apps:               &AppService{c: c},
+		DesignReferences:   &DesignReferenceService{c: c},
 	}
 }
