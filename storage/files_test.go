@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+	"go.proteos.ai/model/common"
 	storagemodel "go.proteos.ai/model/storage"
 	storageapi "go.proteos.ai/model/storage/api"
 	sdk "go.proteos.ai/sdk"
@@ -118,6 +119,38 @@ func TestFilesCreate_WithUpload(t *testing.T) {
 		&storage.FileUpload{Filename: "hello.txt", ContentType: "text/plain", Reader: strings.NewReader("hello")})
 	require.NoError(t, err)
 	require.True(t, file.IsPersisted)
+}
+
+func TestFilesUpdate_PatchesPublicAccess(t *testing.T) {
+	s := newClient(t, func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, http.MethodPatch, r.Method)
+		require.Equal(t, "/storage/v1/files/f-1", r.URL.Path)
+
+		mr, err := r.MultipartReader()
+		require.NoError(t, err)
+
+		part, err := mr.NextPart()
+		require.NoError(t, err)
+		require.Equal(t, "metadata", part.FormName())
+		var req storageapi.UpdateFileRequest
+		require.NoError(t, json.NewDecoder(part).Decode(&req))
+		require.Nil(t, req.Name, "unset fields must stay omitted")
+		require.NotNil(t, req.PublicAccess)
+		require.Equal(t, common.PublicAccess{common.PublicAccessRead}, *req.PublicAccess)
+
+		_, err = mr.NextPart()
+		require.Equal(t, io.EOF, err, "metadata-only update must carry no file part")
+
+		w.WriteHeader(http.StatusAccepted)
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"data": storagemodel.File{Id: "f-1", Name: "report.pdf", PublicAccess: common.PublicAccess{common.PublicAccessRead}},
+		})
+	})
+
+	access := common.PublicAccess{common.PublicAccessRead}
+	file, err := s.Files.Update(context.Background(), "f-1", storageapi.UpdateFileRequest{PublicAccess: &access}, nil)
+	require.NoError(t, err)
+	require.Equal(t, common.PublicAccess{common.PublicAccessRead}, file.PublicAccess)
 }
 
 func TestFilesDownload_StreamsBody(t *testing.T) {

@@ -22,6 +22,7 @@ type FileServiceAPI interface {
 	ListPage(ctx context.Context, opts *ListFilesOptions) (sdk.ListResult[storagemodel.File], error)
 	Get(ctx context.Context, id string) (storagemodel.File, error)
 	Create(ctx context.Context, request storageapi.CreateFileRequest, upload *FileUpload) (storagemodel.File, error)
+	Update(ctx context.Context, id string, request storageapi.UpdateFileRequest, upload *FileUpload) (storagemodel.File, error)
 	Download(ctx context.Context, id string) (io.ReadCloser, error)
 	GenerateDownloadUrl(ctx context.Context, id string) (AccessUrl, error)
 	GenerateUploadUrl(ctx context.Context, id string) (AccessUrl, error)
@@ -94,6 +95,35 @@ func (s *FileService) Create(ctx context.Context, request storageapi.CreateFileR
 
 	var out dataEnvelope[storagemodel.File]
 	err = s.c.DoMultipartJSON(ctx, http.MethodPost, filesBasePath, "metadata", string(metaJSON), files, &out)
+	return out.Data, err
+}
+
+// Update patches a file's metadata — name, is_locked, public_access (only
+// ["read"] is honored; an empty set makes the file private again). Nil fields
+// are left untouched. With upload set, the bytes are streamed in the same
+// request as a new version.
+func (s *FileService) Update(ctx context.Context, id string, request storageapi.UpdateFileRequest, upload *FileUpload) (storagemodel.File, error) {
+	metaJSON, err := json.Marshal(request)
+	if err != nil {
+		return storagemodel.File{}, fmt.Errorf("storage: marshal update file metadata: %w", err)
+	}
+
+	var files []httpx.MultipartFile
+	if upload != nil && upload.Reader != nil {
+		contentType := upload.ContentType
+		if contentType == "" {
+			contentType = "application/octet-stream"
+		}
+		files = append(files, httpx.MultipartFile{
+			FieldName:   "file",
+			Filename:    upload.Filename,
+			ContentType: contentType,
+			Reader:      upload.Reader,
+		})
+	}
+
+	var out dataEnvelope[storagemodel.File]
+	err = s.c.DoMultipartJSON(ctx, http.MethodPatch, filesBasePath+"/"+id, "metadata", string(metaJSON), files, &out)
 	return out.Data, err
 }
 
