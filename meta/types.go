@@ -145,20 +145,22 @@ type ListListsOptions struct {
 }
 
 type CreateListRequest struct {
-	Slug       string                 `json:"slug"`
-	ModuleSlug string                 `json:"module_slug"`
-	EntitySlug string                 `json:"entity_slug"`
-	Name       string                 `json:"name"`
-	Columns    []metamodel.Column     `json:"columns"`
-	Sorting    []metamodel.SortConfig `json:"sorting"`
-	Filters    []common.FilterGroup   `json:"filters"`
+	Slug            string                 `json:"slug"`
+	ModuleSlug      string                 `json:"module_slug"`
+	EntitySlug      string                 `json:"entity_slug"`
+	Name            string                 `json:"name"`
+	Columns         []metamodel.Column     `json:"columns"`
+	DefaultPageSlug string                 `json:"default_page_slug,omitempty"`
+	Sorting         []metamodel.SortConfig `json:"sorting"`
+	Filters         []common.FilterGroup   `json:"filters"`
 }
 
 type UpdateListRequest struct {
-	Name    *string                 `json:"name,omitempty"`
-	Columns *[]metamodel.Column     `json:"columns,omitempty"`
-	Sorting *[]metamodel.SortConfig `json:"sorting,omitempty"`
-	Filters *[]common.FilterGroup   `json:"filters,omitempty"`
+	Name            *string                 `json:"name,omitempty"`
+	Columns         *[]metamodel.Column     `json:"columns,omitempty"`
+	DefaultPageSlug *string                 `json:"default_page_slug,omitempty"`
+	Sorting         *[]metamodel.SortConfig `json:"sorting,omitempty"`
+	Filters         *[]common.FilterGroup   `json:"filters,omitempty"`
 }
 
 // ----------------------------------------------------------------------
