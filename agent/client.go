@@ -11,6 +11,7 @@ type Client struct {
 	Agents     *AgentService
 	Prompts    *PromptService
 	Tools      *ToolService
+	Toolsets   *ToolsetService
 	McpServers *McpServerService
 	Skills     *SkillService
 }
@@ -21,6 +22,7 @@ func New(c *sdk.Client) *Client {
 		Agents:     &AgentService{c: c},
 		Prompts:    &PromptService{c: c},
 		Tools:      &ToolService{c: c},
+		Toolsets:   &ToolsetService{c: c},
 		McpServers: &McpServerService{c: c},
 		Skills:     &SkillService{c: c},
 	}

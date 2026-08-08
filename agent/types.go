@@ -45,6 +45,15 @@ type ListToolsOptions struct {
 	Expand string `query:"expand,omitempty"`
 }
 
+type ListToolsetsOptions struct {
+	ListOptions
+	Key        string `query:"key,omitempty"`
+	Name       string `query:"name,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+	// Kind filters the merged listing by origin (platform | custom).
+	Kind string `query:"kind,omitempty"`
+}
+
 type ListMcpServersOptions struct {
 	ListOptions
 	Key        string `query:"key,omitempty"`
