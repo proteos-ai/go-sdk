@@ -198,3 +198,23 @@ func TestFilesGenerateUploadUrl_SurfacesApiError(t *testing.T) {
 	require.Equal(t, http.StatusConflict, sdkErr.HTTPStatus)
 	require.Equal(t, sdk.ErrCode("file_locked"), sdkErr.Code)
 }
+
+func TestFilesDelete(t *testing.T) {
+	s := newClient(t, func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, http.MethodDelete, r.Method)
+		require.Equal(t, "/storage/v1/files/f-1", r.URL.Path)
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	require.NoError(t, s.Files.Delete(context.Background(), "f-1"))
+}
+
+func TestFilesDeleteVersion(t *testing.T) {
+	s := newClient(t, func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, http.MethodDelete, r.Method)
+		require.Equal(t, "/storage/v1/files/f-1/versions/v-1", r.URL.Path)
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	require.NoError(t, s.Files.DeleteVersion(context.Background(), "f-1", "v-1"))
+}

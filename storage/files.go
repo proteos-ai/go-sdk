@@ -24,6 +24,8 @@ type FileServiceAPI interface {
 	Create(ctx context.Context, request storageapi.CreateFileRequest, upload *FileUpload) (storagemodel.File, error)
 	Update(ctx context.Context, id string, request storageapi.UpdateFileRequest, upload *FileUpload) (storagemodel.File, error)
 	Download(ctx context.Context, id string) (io.ReadCloser, error)
+	Delete(ctx context.Context, id string) error
+	DeleteVersion(ctx context.Context, id string, versionId string) error
 	GenerateDownloadUrl(ctx context.Context, id string) (AccessUrl, error)
 	GenerateUploadUrl(ctx context.Context, id string) (AccessUrl, error)
 }
@@ -132,6 +134,20 @@ func (s *FileService) Update(ctx context.Context, id string, request storageapi.
 func (s *FileService) Download(ctx context.Context, id string) (io.ReadCloser, error) {
 	body, _, err := s.c.DoRaw(ctx, http.MethodGet, filesBasePath+"/"+id+"/download", nil)
 	return body, err
+}
+
+// Delete permanently deletes a file: every version's stored bytes, its
+// access tokens and parsed content. Irreversible. Locked files are refused
+// (409 delete_locked_file); unlock via Update first.
+func (s *FileService) Delete(ctx context.Context, id string) error {
+	return s.c.Do(ctx, http.MethodDelete, filesBasePath+"/"+id, nil, nil)
+}
+
+// DeleteVersion permanently deletes a single non-current version and its
+// stored bytes. Deleting the current version is refused
+// (409 delete_current_version), as are locked files (409 delete_locked_file).
+func (s *FileService) DeleteVersion(ctx context.Context, id string, versionId string) error {
+	return s.c.Do(ctx, http.MethodDelete, filesBasePath+"/"+id+"/versions/"+versionId, nil, nil)
 }
 
 // GenerateDownloadUrl mints a short-lived (5 min TTL), one-time-use public
