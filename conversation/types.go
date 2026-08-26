@@ -26,3 +26,11 @@ type ListConversationTypesOptions struct {
 	Search     string `query:"search,omitempty"`
 	ModuleSlug string `query:"module_slug,omitempty"`
 }
+
+// ListContactGroupsOptions — ModuleSlug is what makes `pro module` remote-state
+// discovery possible; never remove it.
+type ListContactGroupsOptions struct {
+	ListOptions
+	Search     string `query:"search,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+}
