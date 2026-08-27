@@ -80,3 +80,12 @@ func (s *WorkflowService) Unpause(ctx context.Context, key string) (workflowmode
 	err := s.c.Do(ctx, http.MethodPost, workflowsBasePath+"/"+key+"/unpause", nil, &out)
 	return out, err
 }
+
+// Run starts one manual execution and returns it immediately (202) — poll
+// Executions for progress. Inputs must satisfy the manual trigger's
+// input_schema; DestinationNodeId turns the run into a partial execution.
+func (s *WorkflowService) Run(ctx context.Context, key string, req workflowapi.RunWorkflowRequest) (workflowmodel.WorkflowExecution, error) {
+	var out workflowmodel.WorkflowExecution
+	err := s.c.Do(ctx, http.MethodPost, workflowsBasePath+"/"+key+"/run", req, &out)
+	return out, err
+}

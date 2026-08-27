@@ -135,6 +135,70 @@ type ListRolesOptions struct {
 	Description string `query:"description,omitempty"`
 }
 
+// Team is a node in the org's structure, and a principal that can hold access
+// anywhere a user can.
+//
+// Hierarchy rolls UP: a member of a child team counts as a member of every
+// ancestor for grants made to that ancestor. The slug is immutable — grants
+// reference `team:<orgId>/<slug>`.
+type Team struct {
+	AuditFields
+	Slug        string `json:"slug"`
+	Name        string `json:"name"`
+	OrgID       string `json:"org_id"`
+	Description string `json:"description"`
+	// ParentTeamSlug is this team's parent within the same org; empty for a root.
+	ParentTeamSlug string `json:"parent_team_slug"`
+}
+
+// TeamMember is one user's DIRECT membership of one team. Membership of ancestor
+// teams is derived rather than stored.
+type TeamMember struct {
+	AuditFields
+	ID       string `json:"id"`
+	OrgID    string `json:"org_id"`
+	TeamSlug string `json:"team_slug"`
+	UserID   string `json:"user_id"`
+}
+
+type CreateTeamRequest struct {
+	OrgID       string `json:"org_id,omitempty"`
+	Slug        string `json:"slug"`
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+	// ParentTeamSlug nests the team under an existing one; empty makes it a root.
+	ParentTeamSlug string `json:"parent_team_slug,omitempty"`
+}
+
+// UpdateTeamRequest omits Slug deliberately: it is half the primary key and every
+// grant references it, so a rename would orphan them. A pointer to an empty
+// string promotes the team to a root.
+type UpdateTeamRequest struct {
+	Name           *string `json:"name,omitempty"`
+	Description    *string `json:"description,omitempty"`
+	ParentTeamSlug *string `json:"parent_team_slug,omitempty"`
+}
+
+type ListTeamsOptions struct {
+	ListOptions
+	OrgID          string `query:"org_id,omitempty"`
+	Slug           string `query:"slug,omitempty"`
+	Name           string `query:"name,omitempty"`
+	Description    string `query:"description,omitempty"`
+	ParentTeamSlug string `query:"parent_team_slug,omitempty"`
+}
+
+type AddTeamMemberRequest struct {
+	UserID string `json:"user_id"`
+}
+
+type ListTeamMembersOptions struct {
+	ListOptions
+	OrgID    string `query:"org_id,omitempty"`
+	TeamSlug string `query:"team_slug,omitempty"`
+	UserID   string `query:"user_id,omitempty"`
+}
+
 // Organization is a tenant in the platform.
 type Organization struct {
 	AuditFields
