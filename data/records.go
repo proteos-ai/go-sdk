@@ -2,7 +2,10 @@ package data
 
 import (
 	"context"
+	"encoding/json"
+	"maps"
 	"net/http"
+
 	datamodel "go.proteos.ai/model/data"
 	sdk "go.proteos.ai/sdk"
 )
@@ -46,8 +49,31 @@ func (s *RecordService) List(entitySlug string, opts *ListRecordsOptions) *sdk.P
 // ListPage fetches a single page of records for the given entity.
 func (s *RecordService) ListPage(ctx context.Context, entitySlug string, opts *ListRecordsOptions) (sdk.ListResult[datamodel.Record], error) {
 	var out sdk.ListResult[datamodel.Record]
-	err := s.c.DoWithQuery(ctx, http.MethodGet, recordsBasePath+"/"+entitySlug, opts, nil, &out)
+	opts, err := withEncodedFilter(opts)
+	if err != nil {
+		return out, err
+	}
+	err = s.c.DoWithQuery(ctx, http.MethodGet, recordsBasePath+"/"+entitySlug, opts, nil, &out)
 	return out, err
+}
+
+// withEncodedFilter folds a nested Filter tree into the flat Filters map as
+// the `_filter` JSON param (the query encoder only emits primitives). The
+// input options are never mutated — callers may reuse them across pages.
+func withEncodedFilter(opts *ListRecordsOptions) (*ListRecordsOptions, error) {
+	if opts == nil || opts.Filter == nil {
+		return opts, nil
+	}
+	encoded, err := json.Marshal(opts.Filter)
+	if err != nil {
+		return nil, err
+	}
+	out := *opts
+	out.Filter = nil
+	out.Filters = make(map[string]any, len(opts.Filters)+1)
+	maps.Copy(out.Filters, opts.Filters)
+	out.Filters["_filter"] = string(encoded)
+	return &out, nil
 }
 
 // Get returns a single record.

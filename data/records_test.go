@@ -11,9 +11,10 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"go.proteos.ai/model/common"
+	datamodel "go.proteos.ai/model/data"
 	sdk "go.proteos.ai/sdk"
 	"go.proteos.ai/sdk/data"
-	datamodel "go.proteos.ai/model/data"
 )
 
 func newClient(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *data.Client) {
@@ -92,6 +93,37 @@ func TestRecordService_ListPage_FiltersFlattened(t *testing.T) {
 	require.Contains(t, q, "age[gt]=21")
 	require.Contains(t, q, "status=active")
 	require.Contains(t, q, "sort=name:asc")
+}
+
+func TestRecordService_ListPage_NestedFilterEncoded(t *testing.T) {
+	var seenFilter string
+	_, d := newClient(t, func(w http.ResponseWriter, r *http.Request) {
+		seenFilter = r.URL.Query().Get("_filter")
+		_, _ = w.Write([]byte(`{"meta":{"page":0,"page_size":10,"items_total":0,"pages_total":0},"data":[]}`))
+	})
+	opts := &data.ListRecordsOptions{
+		PageSize: 10,
+		Filters:  map[string]any{"status": "active"},
+		Filter: &common.FilterGroup{
+			LogicalOperator: common.LogicalOperatorOr,
+			Elements: []common.FilterElement{
+				{Field: "stage", Operator: common.ComparisonOperatorEquals, Value: "won"},
+				{Field: "company_id.name", Operator: common.ComparisonOperatorContains, Value: "acme"},
+			},
+		},
+	}
+	_, err := d.Records.ListPage(context.Background(), "customer", opts)
+	require.NoError(t, err)
+
+	var group common.FilterGroup
+	require.NoError(t, json.Unmarshal([]byte(seenFilter), &group))
+	require.Equal(t, common.LogicalOperatorOr, group.LogicalOperator)
+	require.Len(t, group.Elements, 2)
+	require.Equal(t, "company_id.name", group.Elements[1].Field)
+
+	// The caller's options must not be mutated — no _filter leak into Filters.
+	require.NotContains(t, opts.Filters, "_filter")
+	require.NotNil(t, opts.Filter)
 }
 
 // url_unescape returns the URL with query-string components unescaped, to

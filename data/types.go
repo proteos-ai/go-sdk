@@ -3,6 +3,7 @@
 package data
 
 import (
+	"go.proteos.ai/model/common"
 	"go.proteos.ai/model/data"
 	dataapi "go.proteos.ai/model/data/api"
 )
@@ -12,7 +13,15 @@ import (
 // Filters carries arbitrary attribute filters as flat query-string params.
 // Operators use bracket syntax: [eq], [ne], [gt], [gte], [lt], [lte], [in]
 // (pipe-separated), [not_in], [contains], [starts_with], [ends_with],
-// [empty], [not_empty]. The default operator is [eq].
+// [empty], [not_empty]. The default operator is [eq]. Flat filters are
+// AND-combined; an attribute may reach one hop through a relation with a
+// dotted path ("company_id.name[contains]").
+//
+// Filter carries a nested filter-group tree (AND/OR groups, the same wire
+// dialect as visible_when and List.filters). It is sent as the data-service's
+// `_filter` JSON query param and composes with Filters: the server ANDs the
+// tree with any flat params. Element values are strings (pipe-joined for
+// in / not_in), and fields may use the same dotted relation-hop paths.
 //
 // Example:
 //
@@ -22,12 +31,22 @@ import (
 //	        "name[contains]": "alice",
 //	        "age[gte]":       21,
 //	    },
+//	    Filter: &common.FilterGroup{
+//	        LogicalOperator: common.LogicalOperatorOr,
+//	        Elements: []common.FilterElement{
+//	            {Field: "stage", Operator: common.ComparisonOperatorEquals, Value: "won"},
+//	            {Field: "company_id.name", Operator: common.ComparisonOperatorContains, Value: "acme"},
+//	        },
+//	    },
 //	}
 type ListRecordsOptions struct {
 	Page     int            `query:"page"               json:"page"`
 	PageSize int            `query:"page_size"           json:"page_size"`
 	Sort     string         `query:"sort,omitempty"     json:"sort,omitempty"`
 	Filters  map[string]any `query:",flatten"           json:"filters,omitempty"`
+	// Filter is serialized into the `_filter` query param by ListPage — the
+	// query encoder itself skips struct fields, hence the query:"-".
+	Filter *common.FilterGroup `query:"-"                json:"filter,omitempty"`
 }
 
 // BatchTransactionStatus is the per-transaction status returned by batch
