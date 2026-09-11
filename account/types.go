@@ -271,3 +271,71 @@ type ListUserRoleAssignmentsOptions struct {
 	ID       string `query:"id,omitempty"`
 	RoleSlug string `query:"role_slug,omitempty"`
 }
+
+// Profile is the org's user-type: ONE per user per org (unlike roles). It owns
+// the defaults keyed by subject alone — the app opened after login and the
+// app-switcher allowlist — and is the key metadata app configurations bind
+// per-app defaults (home, menu, agents, record pages) to.
+type Profile struct {
+	AuditFields
+	Slug        string `json:"slug"`
+	Name        string `json:"name"`
+	OrgID       string `json:"org_id"`
+	Description string `json:"description"`
+	// ModuleSlug attributes the profile to the module that shipped it.
+	ModuleSlug string `json:"module_slug"`
+	// DefaultAppSlug is the app opened after login (clients fail open to the
+	// first visible app when it names none).
+	DefaultAppSlug string `json:"default_app_slug"`
+	// AppSlugs is the app-switcher allowlist; empty = every app.
+	AppSlugs []string `json:"app_slugs"`
+}
+
+type CreateProfileRequest struct {
+	Slug           string   `json:"slug"`
+	Name           string   `json:"name"`
+	Description    string   `json:"description,omitempty"`
+	ModuleSlug     string   `json:"module_slug,omitempty"`
+	DefaultAppSlug string   `json:"default_app_slug,omitempty"`
+	AppSlugs       []string `json:"app_slugs,omitempty"`
+}
+
+type UpdateProfileRequest struct {
+	Name           *string   `json:"name,omitempty"`
+	Description    *string   `json:"description,omitempty"`
+	ModuleSlug     *string   `json:"module_slug,omitempty"`
+	DefaultAppSlug *string   `json:"default_app_slug,omitempty"`
+	AppSlugs       *[]string `json:"app_slugs,omitempty"`
+}
+
+type ListProfilesOptions struct {
+	ListOptions
+	Slug           string `query:"slug,omitempty"`
+	Name           string `query:"name,omitempty"`
+	ModuleSlug     string `query:"module_slug,omitempty"`
+	DefaultAppSlug string `query:"default_app_slug,omitempty"`
+}
+
+// UserProfileAssignment binds a user to their one profile in an org.
+type UserProfileAssignment struct {
+	AuditFields
+	ID          string `json:"id"`
+	UserID      string `json:"user_id"`
+	ProfileSlug string `json:"profile_slug"`
+	OrgID       string `json:"org_id"`
+}
+
+// SetProfileRequest is the body for PUT /accounts/v1/users/{id}/profile — it
+// replaces the user's profile in the token org.
+type SetProfileRequest struct {
+	ProfileSlug string `json:"profile_slug"`
+}
+
+// ListUserProfileAssignmentsOptions filters the org-wide profile-assignment
+// listing (GET /accounts/v1/user-profile-assignments).
+type ListUserProfileAssignmentsOptions struct {
+	ListOptions
+	ID          string `query:"id,omitempty"`
+	UserID      string `query:"user_id,omitempty"`
+	ProfileSlug string `query:"profile_slug,omitempty"`
+}

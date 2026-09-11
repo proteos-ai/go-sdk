@@ -2,8 +2,8 @@ package meta
 
 import (
 	"context"
-	sdk "go.proteos.ai/sdk"
 	metamodel "go.proteos.ai/model/meta"
+	sdk "go.proteos.ai/sdk"
 	"net/http"
 )
 

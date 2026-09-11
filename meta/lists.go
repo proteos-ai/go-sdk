@@ -2,9 +2,9 @@ package meta
 
 import (
 	"context"
-	"net/http"
 	metamodel "go.proteos.ai/model/meta"
 	sdk "go.proteos.ai/sdk"
+	"net/http"
 )
 
 const listsBasePath = "/meta/v1/lists"

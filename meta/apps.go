@@ -3,9 +3,9 @@ package meta
 import (
 	"context"
 	"errors"
-	"net/http"
 	metamodel "go.proteos.ai/model/meta"
 	sdk "go.proteos.ai/sdk"
+	"net/http"
 )
 
 const appsBasePath = "/meta/v1/apps"

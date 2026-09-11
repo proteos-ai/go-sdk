@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+	"go.proteos.ai/model/common"
 	sdk "go.proteos.ai/sdk"
 	"go.proteos.ai/sdk/account"
-	"go.proteos.ai/model/common"
 )
 
 // queryPage parses ?page=N from the request, defaulting to 0 when absent.

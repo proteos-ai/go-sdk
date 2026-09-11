@@ -9,8 +9,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.proteos.ai/sdk/meta"
 	metamodel "go.proteos.ai/model/meta"
+	"go.proteos.ai/sdk/meta"
 )
 
 func sampleModule() metamodel.Module {

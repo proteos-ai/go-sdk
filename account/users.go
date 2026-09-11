@@ -21,6 +21,9 @@ type UserServiceAPI interface {
 	GetRolesPage(ctx context.Context, userID string, opts *ListUserRoleAssignmentsOptions) (sdk.ListResult[UserRoleAssignment], error)
 	AssignRole(ctx context.Context, userID string, req AssignRoleRequest) (UserRoleAssignment, error)
 	UnassignRole(ctx context.Context, userID, roleSlug string) error
+	GetProfile(ctx context.Context, userID string) (UserProfileAssignment, error)
+	SetProfile(ctx context.Context, userID string, req SetProfileRequest) (UserProfileAssignment, error)
+	ClearProfile(ctx context.Context, userID string) error
 	ListApiKeys(ctx context.Context, userID string) ([]ApiKey, error)
 	CreateApiKey(ctx context.Context, userID string, req CreateApiKeyRequest) (CreatedApiKey, error)
 	DeleteApiKey(ctx context.Context, userID, keyID string) error
@@ -106,6 +109,28 @@ func (s *UserService) AssignRole(ctx context.Context, userID string, req AssignR
 // UnassignRole revokes a role from the user.
 func (s *UserService) UnassignRole(ctx context.Context, userID, roleSlug string) error {
 	return s.c.Do(ctx, http.MethodDelete, usersBasePath+"/"+userID+"/roles/"+roleSlug, nil, nil)
+}
+
+// GetProfile returns the user's profile assignment in the token org (404 when
+// unassigned).
+func (s *UserService) GetProfile(ctx context.Context, userID string) (UserProfileAssignment, error) {
+	var out UserProfileAssignment
+	err := s.c.Do(ctx, http.MethodGet, usersBasePath+"/"+userID+"/profile", nil, &out)
+	return out, err
+}
+
+// SetProfile replaces the user's profile in the token org (one per user per
+// org). The user must be an org member (hold a role there): 400
+// user_not_in_org otherwise; 404 for an unknown user or profile.
+func (s *UserService) SetProfile(ctx context.Context, userID string, req SetProfileRequest) (UserProfileAssignment, error) {
+	var out UserProfileAssignment
+	err := s.c.Do(ctx, http.MethodPut, usersBasePath+"/"+userID+"/profile", req, &out)
+	return out, err
+}
+
+// ClearProfile drops the user back to the default app configuration.
+func (s *UserService) ClearProfile(ctx context.Context, userID string) error {
+	return s.c.Do(ctx, http.MethodDelete, usersBasePath+"/"+userID+"/profile", nil, nil)
 }
 
 type listApiKeysResponse struct {

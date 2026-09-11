@@ -6,9 +6,9 @@ import (
 	"io"
 	"net/http"
 
+	metamodel "go.proteos.ai/model/meta"
 	sdk "go.proteos.ai/sdk"
 	"go.proteos.ai/sdk/internal/httpx"
-	metamodel "go.proteos.ai/model/meta"
 )
 
 const componentsBasePath = "/meta/v1/components"

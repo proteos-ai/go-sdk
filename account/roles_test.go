@@ -43,8 +43,8 @@ func TestRoleService_ListPage_BuildsURL(t *testing.T) {
 		_, _ = w.Write([]byte(`{"meta":{"page":0,"page_size":10,"items_total":0,"pages_total":0},"data":[]}`))
 	})
 	_, err := a.Roles.ListPage(context.Background(), &account.ListRolesOptions{
-		ListOptions:    account.ListOptions{Page: 0, PageSize: 10},
-		OrgID: "org-1",
+		ListOptions: account.ListOptions{Page: 0, PageSize: 10},
+		OrgID:       "org-1",
 	})
 	require.NoError(t, err)
 	require.Contains(t, seen, "/accounts/v1/roles")

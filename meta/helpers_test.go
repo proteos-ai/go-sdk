@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+	"go.proteos.ai/model/common"
 	sdk "go.proteos.ai/sdk"
 	"go.proteos.ai/sdk/meta"
-	"go.proteos.ai/model/common"
 )
 
 // validSource returns a non-empty audit UserRef for test fixtures.

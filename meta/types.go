@@ -145,26 +145,24 @@ type ListListsOptions struct {
 }
 
 type CreateListRequest struct {
-	Slug            string                  `json:"slug"`
-	ModuleSlug      string                  `json:"module_slug"`
-	EntitySlug      string                  `json:"entity_slug"`
-	Name            string                  `json:"name"`
-	Columns         []metamodel.Column      `json:"columns"`
-	Actions         []metamodel.PageAction  `json:"actions,omitempty"`
-	SelectionMode   metamodel.SelectionMode `json:"selection_mode,omitempty"`
-	DefaultPageSlug string                  `json:"default_page_slug,omitempty"`
-	Sorting         []metamodel.SortConfig  `json:"sorting"`
-	Filters         []common.FilterGroup    `json:"filters"`
+	Slug          string                  `json:"slug"`
+	ModuleSlug    string                  `json:"module_slug"`
+	EntitySlug    string                  `json:"entity_slug"`
+	Name          string                  `json:"name"`
+	Columns       []metamodel.Column      `json:"columns"`
+	Actions       []metamodel.PageAction  `json:"actions,omitempty"`
+	SelectionMode metamodel.SelectionMode `json:"selection_mode,omitempty"`
+	Sorting       []metamodel.SortConfig  `json:"sorting"`
+	Filters       []common.FilterGroup    `json:"filters"`
 }
 
 type UpdateListRequest struct {
-	Name            *string                  `json:"name,omitempty"`
-	Columns         *[]metamodel.Column      `json:"columns,omitempty"`
-	Actions         *[]metamodel.PageAction  `json:"actions,omitempty"`
-	SelectionMode   *metamodel.SelectionMode `json:"selection_mode,omitempty"`
-	DefaultPageSlug *string                  `json:"default_page_slug,omitempty"`
-	Sorting         *[]metamodel.SortConfig  `json:"sorting,omitempty"`
-	Filters         *[]common.FilterGroup    `json:"filters,omitempty"`
+	Name          *string                  `json:"name,omitempty"`
+	Columns       *[]metamodel.Column      `json:"columns,omitempty"`
+	Actions       *[]metamodel.PageAction  `json:"actions,omitempty"`
+	SelectionMode *metamodel.SelectionMode `json:"selection_mode,omitempty"`
+	Sorting       *[]metamodel.SortConfig  `json:"sorting,omitempty"`
+	Filters       *[]common.FilterGroup    `json:"filters,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -250,6 +248,46 @@ type UpdateMenuConfigurationRequest struct {
 	Name      *string               `json:"name,omitempty"`
 	Items     *[]metamodel.MenuItem `json:"items,omitempty"`
 	IsDefault *bool                 `json:"is_default,omitempty"`
+}
+
+// ----------------------------------------------------------------------
+// AppConfiguration — the typed (app × profile) binding: home, menu, agents,
+// record pages. profile_slug "" = the app's default configuration.
+
+type ListAppConfigurationsOptions struct {
+	ListOptions
+	Slug        string `query:"slug,omitempty"`
+	ModuleSlug  string `query:"module_slug,omitempty"`
+	AppSlug     string `query:"app_slug,omitempty"`
+	ProfileSlug string `query:"profile_slug,omitempty"`
+	// IsDefault: true = only the default rows (no profile), false = only profile
+	// overrides. Needed because an empty ProfileSlug is omitted, not sent.
+	IsDefault *bool  `query:"is_default,omitempty"`
+	MenuSlug  string `query:"menu_slug,omitempty"`
+}
+
+type CreateAppConfigurationRequest struct {
+	Slug            string             `json:"slug"`
+	ModuleSlug      string             `json:"module_slug"`
+	AppSlug         string             `json:"app_slug"`
+	ProfileSlug     string             `json:"profile_slug"`
+	Home            *metamodel.AppHome `json:"home,omitempty"`
+	MenuSlug        string             `json:"menu_slug,omitempty"`
+	DefaultAgentKey string             `json:"default_agent_key,omitempty"`
+	AgentKeys       []string           `json:"agent_keys,omitempty"`
+	RecordPages     map[string]string  `json:"record_pages,omitempty"`
+}
+
+// UpdateAppConfigurationRequest is a partial update. Home is tri-state
+// (absent = unchanged, null = clear, object = set) — send it through
+// common.Optional.
+type UpdateAppConfigurationRequest struct {
+	ModuleSlug      *string                            `json:"module_slug,omitempty"`
+	Home            common.Optional[metamodel.AppHome] `json:"home"`
+	MenuSlug        *string                            `json:"menu_slug,omitempty"`
+	DefaultAgentKey *string                            `json:"default_agent_key,omitempty"`
+	AgentKeys       *[]string                          `json:"agent_keys,omitempty"`
+	RecordPages     *map[string]string                 `json:"record_pages,omitempty"`
 }
 
 // ----------------------------------------------------------------------

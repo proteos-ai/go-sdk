@@ -10,6 +10,7 @@ import sdk "go.proteos.ai/sdk"
 type Client struct {
 	Users         *UserService
 	Roles         *RoleService
+	Profiles      *ProfileService
 	Teams         *TeamService
 	Organizations *OrganizationService
 	PlatformRoles *PlatformRoleService
@@ -21,6 +22,7 @@ func New(c *sdk.Client) *Client {
 	return &Client{
 		Users:         &UserService{c: c},
 		Roles:         &RoleService{c: c},
+		Profiles:      &ProfileService{c: c},
 		Teams:         &TeamService{c: c},
 		Organizations: &OrganizationService{c: c},
 		PlatformRoles: &PlatformRoleService{c: c},

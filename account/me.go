@@ -18,6 +18,7 @@ type meOrganizationsResponse struct {
 type MeServiceAPI interface {
 	Get(ctx context.Context) (User, error)
 	Organizations(ctx context.Context) ([]Organization, error)
+	Profile(ctx context.Context) (Profile, error)
 }
 
 // MeService answers "me"-scoped questions for the authenticated caller.
@@ -40,4 +41,12 @@ func (s *MeService) Organizations(ctx context.Context) ([]Organization, error) {
 	var out meOrganizationsResponse
 	err := s.c.Do(ctx, http.MethodGet, meBasePath+"/organizations", nil, &out)
 	return out.Data, err
+}
+
+// Profile returns the caller's profile in the token org — the subject app
+// configurations are resolved against. 404 when the caller has none.
+func (s *MeService) Profile(ctx context.Context) (Profile, error) {
+	var out Profile
+	err := s.c.Do(ctx, http.MethodGet, meBasePath+"/profile", nil, &out)
+	return out, err
 }

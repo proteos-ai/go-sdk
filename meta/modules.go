@@ -3,11 +3,11 @@ package meta
 import (
 	"context"
 	"encoding/json"
-	"io"
-	"net/http"
 	metamodel "go.proteos.ai/model/meta"
 	sdk "go.proteos.ai/sdk"
 	"go.proteos.ai/sdk/internal/httpx"
+	"io"
+	"net/http"
 )
 
 const modulesBasePath = "/meta/v1/modules"

@@ -16,6 +16,7 @@ type Client struct {
 	ListViews          *ListViewService
 	Pages              *PageService
 	MenuConfigurations *MenuConfigurationService
+	AppConfigurations  *AppConfigurationService
 	Apps               *AppService
 	DesignReferences   *DesignReferenceService
 }
@@ -31,6 +32,7 @@ func New(c *sdk.Client) *Client {
 		ListViews:          &ListViewService{c: c},
 		Pages:              &PageService{c: c},
 		MenuConfigurations: &MenuConfigurationService{c: c},
+		AppConfigurations:  &AppConfigurationService{c: c},
 		Apps:               &AppService{c: c},
 		DesignReferences:   &DesignReferenceService{c: c},
 	}
