@@ -251,6 +251,147 @@ type UpdateMenuConfigurationRequest struct {
 }
 
 // ----------------------------------------------------------------------
+// EntityExtension — attributes contributed to an existing host entity by a
+// resource that does not own it. The host's stored attributes are the
+// materialized merge (each contributed attribute stamped with extension_key).
+
+type ListEntityExtensionsOptions struct {
+	ListOptions
+	Key        string `query:"key,omitempty"`
+	Name       string `query:"name,omitempty"`
+	EntitySlug string `query:"entity_slug,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+}
+
+type CreateEntityExtensionRequest struct {
+	Key         string `json:"key"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	// EntitySlug is the host entity; immutable after create.
+	EntitySlug string `json:"entity_slug"`
+	ModuleSlug string `json:"module_slug"`
+	// Attributes are the contributed definitions: at least one, no platform
+	// names, no extension_key (the server stamps it on the host).
+	Attributes []metamodel.Attribute `json:"attributes"`
+}
+
+// UpdateEntityExtensionRequest is a partial update; attributes, when present,
+// replaces the whole contributed list. entity_slug is immutable.
+type UpdateEntityExtensionRequest struct {
+	Name        *string                `json:"name,omitempty"`
+	Description *string                `json:"description,omitempty"`
+	ModuleSlug  *string                `json:"module_slug,omitempty"`
+	Attributes  *[]metamodel.Attribute `json:"attributes,omitempty"`
+}
+
+// ----------------------------------------------------------------------
+// PageExtension — anchored layout blocks contributed to an existing host page
+// by a resource that does not own it. The host's layout is the materialized
+// merge (each contributed element and tab stamped with extension_key).
+
+type ListPageExtensionsOptions struct {
+	ListOptions
+	Key        string `query:"key,omitempty"`
+	Name       string `query:"name,omitempty"`
+	PageSlug   string `query:"page_slug,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+}
+
+type CreatePageExtensionRequest struct {
+	Key         string `json:"key"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	// PageSlug is the host page; immutable after create.
+	PageSlug   string `json:"page_slug"`
+	ModuleSlug string `json:"module_slug"`
+	// Placements are the contributed blocks: at least one, every element and
+	// tab with an authored id, no extension_key (the server stamps it on the
+	// host).
+	Placements []metamodel.PageExtensionPlacement `json:"placements"`
+}
+
+// UpdatePageExtensionRequest is a partial update; placements, when present,
+// replaces the whole contributed list. page_slug is immutable.
+type UpdatePageExtensionRequest struct {
+	Name        *string                             `json:"name,omitempty"`
+	Description *string                             `json:"description,omitempty"`
+	ModuleSlug  *string                             `json:"module_slug,omitempty"`
+	Placements  *[]metamodel.PageExtensionPlacement `json:"placements,omitempty"`
+}
+
+// ----------------------------------------------------------------------
+// MenuConfigurationExtension — items contributed to an existing host menu
+// configuration by a resource that does not own it. The host's items are the
+// materialized merge (each contributed item stamped with extension_key; a
+// replaced / removed host item kept under replaced_item).
+
+type ListMenuConfigurationExtensionsOptions struct {
+	ListOptions
+	Key        string `query:"key,omitempty"`
+	Name       string `query:"name,omitempty"`
+	MenuSlug   string `query:"menu_slug,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+}
+
+type CreateMenuConfigurationExtensionRequest struct {
+	Key         string `json:"key"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	// MenuSlug is the host menu configuration; immutable after create.
+	MenuSlug   string `json:"menu_slug"`
+	ModuleSlug string `json:"module_slug"`
+	// Placements are the contributed blocks: at least one, every item with an
+	// authored id, no extension_key (the server stamps it on the host).
+	Placements []metamodel.MenuConfigurationExtensionPlacement `json:"placements"`
+}
+
+// UpdateMenuConfigurationExtensionRequest is a partial update; placements,
+// when present, replaces the whole contributed list. menu_slug is immutable.
+type UpdateMenuConfigurationExtensionRequest struct {
+	Name        *string                                          `json:"name,omitempty"`
+	Description *string                                          `json:"description,omitempty"`
+	ModuleSlug  *string                                          `json:"module_slug,omitempty"`
+	Placements  *[]metamodel.MenuConfigurationExtensionPlacement `json:"placements,omitempty"`
+}
+
+// ----------------------------------------------------------------------
+// ListExtension — columns and toolbar actions contributed to an existing host
+// list by a resource that does not own it. The host's columns / actions are
+// the materialized merge (each contributed one stamped with extension_key).
+
+type ListListExtensionsOptions struct {
+	ListOptions
+	Key        string `query:"key,omitempty"`
+	Name       string `query:"name,omitempty"`
+	ListSlug   string `query:"list_slug,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+}
+
+type CreateListExtensionRequest struct {
+	Key         string `json:"key"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	// ListSlug is the host list; immutable after create.
+	ListSlug   string `json:"list_slug"`
+	ModuleSlug string `json:"module_slug"`
+	// Columns are the anchored column placements, Actions the appended
+	// toolbar buttons — at least one of the two; no extension_key (the server
+	// stamps it on the host).
+	Columns []metamodel.ListExtensionColumnPlacement `json:"columns"`
+	Actions []metamodel.PageAction                   `json:"actions"`
+}
+
+// UpdateListExtensionRequest is a partial update; columns / actions, when
+// present, each replace their whole list. list_slug is immutable.
+type UpdateListExtensionRequest struct {
+	Name        *string                                   `json:"name,omitempty"`
+	Description *string                                   `json:"description,omitempty"`
+	ModuleSlug  *string                                   `json:"module_slug,omitempty"`
+	Columns     *[]metamodel.ListExtensionColumnPlacement `json:"columns,omitempty"`
+	Actions     *[]metamodel.PageAction                   `json:"actions,omitempty"`
+}
+
+// ----------------------------------------------------------------------
 // AppConfiguration — the typed (app × profile) binding: home, menu, agents,
 // record pages. profile_slug "" = the app's default configuration.
 
