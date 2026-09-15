@@ -15,6 +15,8 @@ const connectorsBasePath = "/connectors/v1/connectors"
 type ListConnectorsOptions struct {
 	ListOptions
 	Status string `query:"status,omitempty"`
+	// Capability narrows to manifests declaring the tag (e.g. "calendar").
+	Capability string `query:"capability,omitempty"`
 }
 
 // ListOptions mirrors the shared pagination/sorting query params.
