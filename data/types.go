@@ -4,7 +4,7 @@ package data
 
 import (
 	"go.proteos.ai/model/common"
-	"go.proteos.ai/model/data"
+	datamodel "go.proteos.ai/model/data"
 	dataapi "go.proteos.ai/model/data/api"
 )
 
@@ -94,3 +94,26 @@ type QueryExecuteMeta = dataapi.QueryExecuteMeta
 type QueryExecuteResponse = dataapi.QueryExecuteResponse
 type QueryValidateMeta = dataapi.QueryValidateMeta
 type QueryValidateResponse = dataapi.QueryValidateResponse
+
+// Record duplicates + contact-observation replay are re-exported from
+// go.proteos.ai/model/data so callers share the exact wire shapes.
+
+type RecordDuplicate = datamodel.RecordDuplicate
+type RecordDuplicateStatus = datamodel.RecordDuplicateStatus
+type PublishContactObservationsResponse = dataapi.PublishContactObservationsResponse
+
+// ListRecordDuplicatesOptions filters GET /data/v1/records/{entitySlug}/duplicates:
+// RecordId narrows to the pairs one record takes part in (either side);
+// Status defaults to open on the server.
+type ListRecordDuplicatesOptions struct {
+	Page     int    `query:"page"`
+	PageSize int    `query:"page_size"`
+	RecordId string `query:"record_id,omitempty"`
+	Status   string `query:"status,omitempty"`
+}
+
+// PublishContactObservationsOptions pages POST /data/v1/records/{entitySlug}/contact-observations.
+type PublishContactObservationsOptions struct {
+	Page     int `query:"page"`
+	PageSize int `query:"page_size"`
+}

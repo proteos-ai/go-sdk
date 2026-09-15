@@ -24,6 +24,9 @@ type RecordServiceAPI interface {
 	Update(ctx context.Context, entitySlug, id string, data datamodel.Record) (datamodel.Record, error)
 	Delete(ctx context.Context, entitySlug, id string) error
 	BatchUpsert(ctx context.Context, entitySlug string, txns []BatchUpsertTransaction) (BatchUpsertRecordsResponse, error)
+	ListDuplicatesPage(ctx context.Context, entitySlug string, opts *ListRecordDuplicatesOptions) (sdk.ListResult[RecordDuplicate], error)
+	DismissDuplicate(ctx context.Context, entitySlug, id string) (RecordDuplicate, error)
+	PublishContactObservations(ctx context.Context, entitySlug string, opts *PublishContactObservationsOptions) (PublishContactObservationsResponse, error)
 }
 
 // RecordService manages records (per-entity rows) via the data-service.
@@ -107,5 +110,30 @@ func (s *RecordService) Delete(ctx context.Context, entitySlug, id string) error
 func (s *RecordService) BatchUpsert(ctx context.Context, entitySlug string, txns []BatchUpsertTransaction) (BatchUpsertRecordsResponse, error) {
 	var out BatchUpsertRecordsResponse
 	err := s.c.Do(ctx, http.MethodPost, batchRecordsBasePath+"/"+entitySlug+"/upsert", txns, &out)
+	return out, err
+}
+
+// ListDuplicatesPage fetches one page of an entity's record duplicates —
+// "these two records may be the same thing" pairs (primary = the record to
+// keep, secondary = the newcomer), open by default.
+func (s *RecordService) ListDuplicatesPage(ctx context.Context, entitySlug string, opts *ListRecordDuplicatesOptions) (sdk.ListResult[RecordDuplicate], error) {
+	var out sdk.ListResult[RecordDuplicate]
+	err := s.c.DoWithQuery(ctx, http.MethodGet, recordsBasePath+"/"+entitySlug+"/duplicates", opts, nil, &out)
+	return out, err
+}
+
+// DismissDuplicate closes a pair as "not a duplicate".
+func (s *RecordService) DismissDuplicate(ctx context.Context, entitySlug, id string) (RecordDuplicate, error) {
+	var out RecordDuplicate
+	err := s.c.Do(ctx, http.MethodPost, recordsBasePath+"/"+entitySlug+"/duplicates/"+id+"/dismiss", nil, &out)
+	return out, err
+}
+
+// PublishContactObservations replays ONE page of the entity's records as
+// record_contact_observation.created events — the backfill after an
+// attribute became contact-address. Loop until page >= pages_total.
+func (s *RecordService) PublishContactObservations(ctx context.Context, entitySlug string, opts *PublishContactObservationsOptions) (PublishContactObservationsResponse, error) {
+	var out PublishContactObservationsResponse
+	err := s.c.DoWithQuery(ctx, http.MethodPost, recordsBasePath+"/"+entitySlug+"/contact-observations", opts, nil, &out)
 	return out, err
 }

@@ -8,14 +8,16 @@ import sdk "go.proteos.ai/sdk"
 //	c := conversation.New(client)
 //	t, err := c.ConversationTypes.Get(ctx, "sales-discovery")
 type Client struct {
-	ConversationTypes *ConversationTypeService
-	ContactGroups     *ContactGroupService
+	ConversationTypes  *ConversationTypeService
+	ContactGroups      *ContactGroupService
+	ContactRecordLinks *ContactRecordLinkService
 }
 
 // New builds a Client backed by the given *sdk.Client.
 func New(c *sdk.Client) *Client {
 	return &Client{
-		ConversationTypes: &ConversationTypeService{c: c},
-		ContactGroups:     &ContactGroupService{c: c},
+		ConversationTypes:  &ConversationTypeService{c: c},
+		ContactGroups:      &ContactGroupService{c: c},
+		ContactRecordLinks: &ContactRecordLinkService{c: c},
 	}
 }

@@ -23,11 +23,14 @@ const (
 	ErrCodeParse               ErrCode = "parse_error"
 )
 
-// Error is returned for all non-2xx HTTP responses.
+// Error is returned for all non-2xx HTTP responses. Details carries the
+// optional structured `details` object some errors ship (e.g. a 409
+// record_duplicate names the colliding records); nil when absent.
 type Error struct {
 	HTTPStatus int
 	Code       ErrCode
 	Message    string
+	Details    map[string]any
 }
 
 func (e *Error) Error() string {
@@ -97,8 +100,9 @@ func defaultErrCode(status int) ErrCode {
 }
 
 type apiErrorResponse struct {
-	Code    string `json:"code,omitempty"`
-	Message string `json:"message,omitempty"`
+	Code    string         `json:"code,omitempty"`
+	Message string         `json:"message,omitempty"`
+	Details map[string]any `json:"details,omitempty"`
 }
 
 // parseErrorResponse builds a *sdk.Error from a non-2xx response.
@@ -122,6 +126,7 @@ func parseErrorResponse(resp *http.Response) *Error {
 		if apiErr.Message != "" {
 			e.Message = apiErr.Message
 		}
+		e.Details = apiErr.Details
 		return e
 	}
 	e.Message = string(body)

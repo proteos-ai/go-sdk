@@ -1,7 +1,8 @@
 // Package conversation provides services for managing conversation-service
 // resources over the platform API at /conversations/v1. Currently: conversation
 // types — the per-org taxonomy the pre-summary classifier reads, deployable via
-// `pro module deploy` (conversation-types/<key>.json).
+// `pro module deploy` (conversation-types/<key>.json); contact groups; and the
+// contact ↔ record binding resolve data-service calls on record writes.
 //
 // Resource shapes come from go.proteos.ai/model/conversation; the wire-format
 // request types from go.proteos.ai/model/conversation/api are reused directly.
