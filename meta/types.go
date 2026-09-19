@@ -41,21 +41,29 @@ type CreateEntityRequest struct {
 	// access via /data/v1/public/... (only ["read"] honored today).
 	// Full-replacement on upsert: an upsert without the field resets it to
 	// private.
-	PublicRecordAccess common.PublicAccess   `json:"public_record_access"`
-	ModuleSlug         string                `json:"module_slug"`
-	Description        string                `json:"description"`
-	TitleTemplate      string                `json:"title_template"`
-	Attributes         []metamodel.Attribute `json:"attributes"`
+	PublicRecordAccess common.PublicAccess `json:"public_record_access"`
+	// ContactBinding is the entity's contact-binding setting (duplicate_policy
+	// reject | flag). Optional and never defaulted: omitted stays null on the
+	// server, which is what an entity with no contact-address attribute wants
+	// and what keeps a manifest that omits it free of deploy drift.
+	ContactBinding *metamodel.ContactBinding `json:"contact_binding,omitempty"`
+	ModuleSlug     string                    `json:"module_slug"`
+	Description    string                    `json:"description"`
+	TitleTemplate  string                    `json:"title_template"`
+	Attributes     []metamodel.Attribute     `json:"attributes"`
 }
 
 type UpdateEntityRequest struct {
-	Name               *string                `json:"name,omitempty"`
-	IsRemote           *bool                  `json:"is_remote,omitempty"`
-	PublicRecordAccess *common.PublicAccess   `json:"public_record_access,omitempty"`
-	ModuleSlug         *string                `json:"module_slug,omitempty"`
-	Description        *string                `json:"description,omitempty"`
-	TitleTemplate      *string                `json:"title_template,omitempty"`
-	Attributes         *[]metamodel.Attribute `json:"attributes,omitempty"`
+	Name               *string              `json:"name,omitempty"`
+	IsRemote           *bool                `json:"is_remote,omitempty"`
+	PublicRecordAccess *common.PublicAccess `json:"public_record_access,omitempty"`
+	// ContactBinding nil leaves the stored value alone; a pointer to a ZERO
+	// ContactBinding clears it back to null.
+	ContactBinding *metamodel.ContactBinding `json:"contact_binding,omitempty"`
+	ModuleSlug     *string                   `json:"module_slug,omitempty"`
+	Description    *string                   `json:"description,omitempty"`
+	TitleTemplate  *string                   `json:"title_template,omitempty"`
+	Attributes     *[]metamodel.Attribute    `json:"attributes,omitempty"`
 }
 
 // ----------------------------------------------------------------------
