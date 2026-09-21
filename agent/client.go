@@ -14,6 +14,7 @@ type Client struct {
 	Toolsets   *ToolsetService
 	McpServers *McpServerService
 	Skills     *SkillService
+	Models     *ModelService
 }
 
 // New builds a Client backed by the given *sdk.Client.
@@ -25,5 +26,6 @@ func New(c *sdk.Client) *Client {
 		Toolsets:   &ToolsetService{c: c},
 		McpServers: &McpServerService{c: c},
 		Skills:     &SkillService{c: c},
+		Models:     &ModelService{c: c},
 	}
 }
