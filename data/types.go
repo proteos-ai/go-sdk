@@ -12,8 +12,11 @@ import (
 //
 // Filters carries arbitrary attribute filters as flat query-string params.
 // Operators use bracket syntax: [eq], [ne], [gt], [gte], [lt], [lte], [in]
-// (pipe-separated), [not_in], [contains], [starts_with], [ends_with],
-// [empty], [not_empty]. The default operator is [eq]. Flat filters are
+// (pipe-separated), [not_in], [contains], [not_contains], [contains_all]
+// (pipe-separated, arrays only), [starts_with], [ends_with], [empty],
+// [not_empty]. The default operator is [eq]. On array attributes
+// contains / not_contains / in / not_in / contains_all are set-membership
+// tests (has / does not have / has any of / has none of / has all of). Flat filters are
 // AND-combined; an attribute may reach one hop through a relation with a
 // dotted path ("company_id.name[contains]").
 //
@@ -21,7 +24,7 @@ import (
 // dialect as visible_when and List.filters). It is sent as the data-service's
 // `_filter` JSON query param and composes with Filters: the server ANDs the
 // tree with any flat params. Element values are strings (pipe-joined for
-// in / not_in), and fields may use the same dotted relation-hop paths.
+// in / not_in / contains_all), and fields may use the same dotted relation-hop paths.
 //
 // Example:
 //
