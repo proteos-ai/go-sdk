@@ -416,27 +416,29 @@ type ListAppConfigurationsOptions struct {
 }
 
 type CreateAppConfigurationRequest struct {
-	Slug            string             `json:"slug"`
-	ModuleSlug      string             `json:"module_slug"`
-	AppSlug         string             `json:"app_slug"`
-	ProfileSlug     string             `json:"profile_slug"`
-	Home            *metamodel.AppHome `json:"home,omitempty"`
-	MenuSlug        string             `json:"menu_slug,omitempty"`
-	DefaultAgentKey string             `json:"default_agent_key,omitempty"`
-	AgentKeys       []string           `json:"agent_keys,omitempty"`
-	RecordPages     map[string]string  `json:"record_pages,omitempty"`
+	Slug               string             `json:"slug"`
+	ModuleSlug         string             `json:"module_slug"`
+	AppSlug            string             `json:"app_slug"`
+	ProfileSlug        string             `json:"profile_slug"`
+	Home               *metamodel.AppHome `json:"home,omitempty"`
+	MenuSlug           string             `json:"menu_slug,omitempty"`
+	DefaultAgentKey    string             `json:"default_agent_key,omitempty"`
+	AgentKeys          []string           `json:"agent_keys,omitempty"`
+	RecordPages        map[string]string  `json:"record_pages,omitempty"`
+	SearchableEntities []string           `json:"searchable_entities,omitempty"`
 }
 
 // UpdateAppConfigurationRequest is a partial update. Home is tri-state
 // (absent = unchanged, null = clear, object = set) — send it through
 // common.Optional.
 type UpdateAppConfigurationRequest struct {
-	ModuleSlug      *string                            `json:"module_slug,omitempty"`
-	Home            common.Optional[metamodel.AppHome] `json:"home"`
-	MenuSlug        *string                            `json:"menu_slug,omitempty"`
-	DefaultAgentKey *string                            `json:"default_agent_key,omitempty"`
-	AgentKeys       *[]string                          `json:"agent_keys,omitempty"`
-	RecordPages     *map[string]string                 `json:"record_pages,omitempty"`
+	ModuleSlug         *string                            `json:"module_slug,omitempty"`
+	Home               common.Optional[metamodel.AppHome] `json:"home"`
+	MenuSlug           *string                            `json:"menu_slug,omitempty"`
+	DefaultAgentKey    *string                            `json:"default_agent_key,omitempty"`
+	AgentKeys          *[]string                          `json:"agent_keys,omitempty"`
+	RecordPages        *map[string]string                 `json:"record_pages,omitempty"`
+	SearchableEntities *[]string                          `json:"searchable_entities,omitempty"`
 }
 
 // ----------------------------------------------------------------------

@@ -1,8 +1,12 @@
 // Package conversation provides services for managing conversation-service
 // resources over the platform API at /conversations/v1. Currently: conversation
 // types — the per-org taxonomy the pre-summary classifier reads, deployable via
-// `pro module deploy` (conversation-types/<key>.json); contact groups; and the
-// contact ↔ record binding resolve data-service calls on record writes.
+// `pro module deploy` (conversation-types/<key>.json); conversation tag
+// definitions + tag sets — WHAT the tag evaluator asks of a conversation and
+// WHERE/WHEN it asks it, deployable the same way
+// (conversation-tag-definitions/<key>.json, conversation-tag-sets/<key>.json);
+// contact groups; and the contact ↔ record binding resolve data-service calls
+// on record writes.
 //
 // Resource shapes come from go.proteos.ai/model/conversation; the wire-format
 // request types from go.proteos.ai/model/conversation/api are reused directly.
@@ -23,6 +27,22 @@ type ListOptions struct {
 }
 
 type ListConversationTypesOptions struct {
+	ListOptions
+	Search     string `query:"search,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+}
+
+// ListConversationTagDefinitionsOptions — ModuleSlug is what `pro module`
+// remote-state discovery filters on; never remove it.
+type ListConversationTagDefinitionsOptions struct {
+	ListOptions
+	Search     string `query:"search,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+}
+
+// ListConversationTagSetsOptions — ModuleSlug is what `pro module` remote-state
+// discovery filters on; never remove it.
+type ListConversationTagSetsOptions struct {
 	ListOptions
 	Search     string `query:"search,omitempty"`
 	ModuleSlug string `query:"module_slug,omitempty"`
