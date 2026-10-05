@@ -6,7 +6,7 @@ require (
 	github.com/rs/zerolog v1.35.1
 	github.com/stretchr/testify v1.12.1
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.69.0
-	go.proteos.ai/model v0.59.2
+	go.proteos.ai/model v0.60.0
 )
 
 require (
