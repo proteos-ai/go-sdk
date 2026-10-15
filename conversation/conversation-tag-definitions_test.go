@@ -62,7 +62,7 @@ func TestConversationTagDefinitionService_Paths(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, http.MethodPost, method)
 	require.Equal(t, "/conversations/v1/conversation-tag-definitions", path)
-	require.JSONEq(t, `{"key":"churn-risk","name":"Churn risk","group":"signal","question":{"type":"boolean","instructions":"Does the customer signal intent to cancel?","criteria":{}},"scope":"conversation","evaluator":{"kind":"decide"},"directions":null,"min_confidence":0.7,"color":"","module_slug":""}`, body)
+	require.JSONEq(t, `{"key":"churn-risk","name":"Churn risk","group":"signal","question":{"type":"boolean","instructions":"Does the customer signal intent to cancel?","criteria":{}},"scope":"conversation","basis":"","role":"","evaluator":{"kind":"decide"},"directions":null,"min_confidence":0.7,"color":"","module_slug":""}`, body)
 
 	name, isEnabled := "Churn risk (v2)", false
 	_, err = s.ConversationTagDefinitions.Update(ctx, "churn-risk", conversationapi.UpdateConversationTagDefinitionRequest{Name: &name, IsEnabled: &isEnabled})

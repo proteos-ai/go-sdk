@@ -5,7 +5,9 @@
 // definitions + tag sets — WHAT the tag evaluator asks of a conversation and
 // WHERE/WHEN it asks it, deployable the same way
 // (conversation-tag-definitions/<key>.json, conversation-tag-sets/<key>.json);
-// contact groups; and the contact ↔ record binding resolve data-service calls
+// conversation objective definitions — WHAT a conversation should achieve,
+// deployable too (conversation-objective-definitions/<key>.json) — and the
+// read-only conversation objectives they stand for; contact groups; and the contact ↔ record binding resolve data-service calls
 // on record writes.
 //
 // Resource shapes come from go.proteos.ai/model/conversation; the wire-format
@@ -46,6 +48,17 @@ type ListConversationTagSetsOptions struct {
 	ListOptions
 	Search     string `query:"search,omitempty"`
 	ModuleSlug string `query:"module_slug,omitempty"`
+}
+
+// ListConversationObjectiveDefinitionsOptions — ModuleSlug is what `pro module`
+// remote-state discovery filters on; never remove it.
+type ListConversationObjectiveDefinitionsOptions struct {
+	ListOptions
+	Search     string `query:"search,omitempty"`
+	ModuleSlug string `query:"module_slug,omitempty"`
+	TypeKey    string `query:"type_key,omitempty"`
+	PhaseKey   string `query:"phase_key,omitempty"`
+	IsEnabled  *bool  `query:"is_enabled"`
 }
 
 // ListContactGroupsOptions — ModuleSlug is what makes `pro module` remote-state
