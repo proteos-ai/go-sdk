@@ -72,7 +72,7 @@ func (s *SchedulingLinkService) Delete(ctx context.Context, key string) error {
 	return s.c.Do(ctx, http.MethodDelete, schedulingLinkPath(key), nil, nil)
 }
 
-// GetSlots reads the link's offer in [query.From, query.To) (at most 31
+// GetSlots reads the link's offer in [query.From, query.To) (at most 42
 // days) as the requester's local days. TypeKey is required on a multi-type
 // link; HostUserId narrows to one of the link's hosts.
 func (s *SchedulingLinkService) GetSlots(ctx context.Context, key string, query schedulingapi.GetPublicSlotsQuery) (schedulingapi.GetSlotsResponse, error) {

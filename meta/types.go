@@ -212,16 +212,23 @@ type ListPagesOptions struct {
 	ModuleSlug string `query:"module_slug,omitempty"`
 	Type       string `query:"type,omitempty"`
 	EntitySlug string `query:"entity_slug,omitempty"`
+	// Kind / Reference narrow to the trigger pages of one invocable.
+	Kind      string `query:"kind,omitempty"`
+	Reference string `query:"reference,omitempty"`
 }
 
 type CreatePageRequest struct {
-	Slug       string                 `json:"slug"`
-	Name       string                 `json:"name"`
-	ModuleSlug string                 `json:"module_slug"`
-	Type       metamodel.PageType     `json:"type,omitempty"`
-	EntitySlug string                 `json:"entity_slug,omitempty"`
-	Actions    []metamodel.PageAction `json:"actions"`
-	Layout     metamodel.PageLayout   `json:"layout"`
+	Slug       string             `json:"slug"`
+	Name       string             `json:"name"`
+	ModuleSlug string             `json:"module_slug"`
+	Type       metamodel.PageType `json:"type,omitempty"`
+	EntitySlug string             `json:"entity_slug,omitempty"`
+	// Kind / Reference bind a trigger page (type=trigger only). See
+	// metamodel.Page.
+	Kind      metamodel.PageActionKind `json:"kind,omitempty"`
+	Reference string                   `json:"reference,omitempty"`
+	Actions   []metamodel.PageAction   `json:"actions"`
+	Layout    metamodel.PageLayout     `json:"layout"`
 }
 
 type UpdatePageRequest struct {
@@ -416,29 +423,33 @@ type ListAppConfigurationsOptions struct {
 }
 
 type CreateAppConfigurationRequest struct {
-	Slug               string             `json:"slug"`
-	ModuleSlug         string             `json:"module_slug"`
-	AppSlug            string             `json:"app_slug"`
-	ProfileSlug        string             `json:"profile_slug"`
-	Home               *metamodel.AppHome `json:"home,omitempty"`
-	MenuSlug           string             `json:"menu_slug,omitempty"`
-	DefaultAgentKey    string             `json:"default_agent_key,omitempty"`
-	AgentKeys          []string           `json:"agent_keys,omitempty"`
-	RecordPages        map[string]string  `json:"record_pages,omitempty"`
-	SearchableEntities []string           `json:"searchable_entities,omitempty"`
+	Slug               string                                  `json:"slug"`
+	ModuleSlug         string                                  `json:"module_slug"`
+	AppSlug            string                                  `json:"app_slug"`
+	ProfileSlug        string                                  `json:"profile_slug"`
+	Home               *metamodel.AppHome                      `json:"home,omitempty"`
+	MenuSlug           string                                  `json:"menu_slug,omitempty"`
+	DefaultAgentKey    string                                  `json:"default_agent_key,omitempty"`
+	AgentKeys          []string                                `json:"agent_keys,omitempty"`
+	RecordPages        map[string]metamodel.RecordPageBinding  `json:"record_pages,omitempty"`
+	ActionPages        map[string]metamodel.TriggerPageBinding `json:"action_pages,omitempty"`
+	WorkflowPages      map[string]metamodel.TriggerPageBinding `json:"workflow_pages,omitempty"`
+	SearchableEntities []string                                `json:"searchable_entities,omitempty"`
 }
 
 // UpdateAppConfigurationRequest is a partial update. Home is tri-state
 // (absent = unchanged, null = clear, object = set) — send it through
 // common.Optional.
 type UpdateAppConfigurationRequest struct {
-	ModuleSlug         *string                            `json:"module_slug,omitempty"`
-	Home               common.Optional[metamodel.AppHome] `json:"home"`
-	MenuSlug           *string                            `json:"menu_slug,omitempty"`
-	DefaultAgentKey    *string                            `json:"default_agent_key,omitempty"`
-	AgentKeys          *[]string                          `json:"agent_keys,omitempty"`
-	RecordPages        *map[string]string                 `json:"record_pages,omitempty"`
-	SearchableEntities *[]string                          `json:"searchable_entities,omitempty"`
+	ModuleSlug         *string                                  `json:"module_slug,omitempty"`
+	Home               common.Optional[metamodel.AppHome]       `json:"home"`
+	MenuSlug           *string                                  `json:"menu_slug,omitempty"`
+	DefaultAgentKey    *string                                  `json:"default_agent_key,omitempty"`
+	AgentKeys          *[]string                                `json:"agent_keys,omitempty"`
+	RecordPages        *map[string]metamodel.RecordPageBinding  `json:"record_pages,omitempty"`
+	ActionPages        *map[string]metamodel.TriggerPageBinding `json:"action_pages,omitempty"`
+	WorkflowPages      *map[string]metamodel.TriggerPageBinding `json:"workflow_pages,omitempty"`
+	SearchableEntities *[]string                                `json:"searchable_entities,omitempty"`
 }
 
 // ----------------------------------------------------------------------

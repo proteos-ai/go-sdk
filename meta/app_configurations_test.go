@@ -71,12 +71,12 @@ func TestAppConfigurationService_Upsert_PinsSlugAndSendsHome(t *testing.T) {
 		_ = json.NewEncoder(w).Encode(sampleAppConfiguration())
 	})
 	_, err := m.AppConfigurations.Upsert(context.Background(), "sales", meta.CreateAppConfigurationRequest{
-		AppSlug: "sales", Home: &metamodel.AppHome{Type: metamodel.AppHomeTypeList, Reference: "companies"}, RecordPages: map[string]string{"company": "company-sales"},
+		AppSlug: "sales", Home: &metamodel.AppHome{Type: metamodel.AppHomeTypeList, Reference: "companies"}, RecordPages: map[string]metamodel.RecordPageBinding{"company": {View: "company-sales"}},
 	})
 	require.NoError(t, err)
 	require.Contains(t, string(body), `"slug":"sales"`)
 	require.Contains(t, string(body), `"home":{"type":"list","reference":"companies"}`)
-	require.Contains(t, string(body), `"record_pages":{"company":"company-sales"}`)
+	require.Contains(t, string(body), `"record_pages":{"company":{"view":"company-sales"}}`)
 }
 
 func TestAppConfigurationService_Update_ClearsHomeWithNull(t *testing.T) {
