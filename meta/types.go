@@ -134,11 +134,15 @@ type CreateComponentRequest struct {
 	// pages may only reference public components). Manifest-driven full
 	// replacement: a deploy without the field sets false.
 	IsPublic bool `json:"is_public"`
+	// ReservedHeight is the px the host reserves for the component before it
+	// renders. Manifest-driven full replacement: a deploy without it sets 0.
+	ReservedHeight int `json:"reserved_height"`
 }
 
 type UpdateComponentRequest struct {
-	Name        *string `json:"name,omitempty"`
-	Description *string `json:"description,omitempty"`
+	Name           *string `json:"name,omitempty"`
+	Description    *string `json:"description,omitempty"`
+	ReservedHeight *int    `json:"reserved_height,omitempty"`
 }
 
 // ----------------------------------------------------------------------
