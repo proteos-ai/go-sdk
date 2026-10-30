@@ -98,6 +98,8 @@ type ListSchedulingLinksOptions struct {
 	TypeKey   string `query:"type_key,omitempty"`
 	IsPublic  *bool  `query:"is_public"`
 	IsEnabled *bool  `query:"is_enabled"`
+	// HostUserId keeps links that list this user among their hosts.
+	HostUserId string `query:"host_user_id,omitempty"`
 	// Search is a case-insensitive substring of key or name.
 	Search string `query:"search,omitempty"`
 }
