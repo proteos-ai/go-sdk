@@ -51,6 +51,10 @@ type CreateEntityRequest struct {
 	Description    string                    `json:"description"`
 	TitleTemplate  string                    `json:"title_template"`
 	Attributes     []metamodel.Attribute     `json:"attributes"`
+	// UniqueConstraints are the composite (2+ attribute) unique constraints;
+	// one-attribute ones are is_unique on the attribute. Full-replacement on
+	// upsert: omitted means none.
+	UniqueConstraints []metamodel.UniqueConstraint `json:"unique_constraints,omitempty"`
 }
 
 type UpdateEntityRequest struct {
@@ -59,11 +63,12 @@ type UpdateEntityRequest struct {
 	PublicRecordAccess *common.PublicAccess `json:"public_record_access,omitempty"`
 	// ContactBinding nil leaves the stored value alone; a pointer to a ZERO
 	// ContactBinding clears it back to null.
-	ContactBinding *metamodel.ContactBinding `json:"contact_binding,omitempty"`
-	ModuleSlug     *string                   `json:"module_slug,omitempty"`
-	Description    *string                   `json:"description,omitempty"`
-	TitleTemplate  *string                   `json:"title_template,omitempty"`
-	Attributes     *[]metamodel.Attribute    `json:"attributes,omitempty"`
+	ContactBinding    *metamodel.ContactBinding     `json:"contact_binding,omitempty"`
+	ModuleSlug        *string                       `json:"module_slug,omitempty"`
+	Description       *string                       `json:"description,omitempty"`
+	TitleTemplate     *string                       `json:"title_template,omitempty"`
+	Attributes        *[]metamodel.Attribute        `json:"attributes,omitempty"`
+	UniqueConstraints *[]metamodel.UniqueConstraint `json:"unique_constraints,omitempty"`
 }
 
 // ----------------------------------------------------------------------
