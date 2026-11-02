@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	sdk "go.proteos.ai/sdk"
-	"go.proteos.ai/sdk/functions"
 	"go.proteos.ai/model/common"
 	functionsmodel "go.proteos.ai/model/functions"
+	sdk "go.proteos.ai/sdk"
+	"go.proteos.ai/sdk/functions"
 )
 
 // validSource returns a non-empty audit UserRef for test fixtures.

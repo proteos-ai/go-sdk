@@ -77,6 +77,16 @@ type DeployActionRequest struct {
 	Returns  []metamodel.Attribute `json:"returns"`
 }
 
+// DeployFunctionBundleRequest is the JSON metadata side of the multipart
+// function-bundle deploy: every hook and action (connector methods ride
+// Actions with scope `connector_method`) the one wasm serves. Entries may
+// leave module_slug empty — the server stamps the bundle's.
+type DeployFunctionBundleRequest struct {
+	ModuleSlug string                `json:"module_slug"`
+	Hooks      []DeployHookRequest   `json:"hooks"`
+	Actions    []DeployActionRequest `json:"actions"`
+}
+
 // PatchActionRequest is the JSON body for `PATCH /api/v1/actions/:slug`.
 type PatchActionRequest struct {
 	IsActive *bool `json:"is_active,omitempty"`

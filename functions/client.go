@@ -26,19 +26,21 @@ import (
 //	f := functions.New(c)
 //	hook, err := f.Hooks.Get(ctx, "validate-invoice")
 type Client struct {
-	Hooks    *HookService
-	Actions  *ActionService
-	Dispatch *DispatchService
-	Logs     *LogService
+	Hooks           *HookService
+	Actions         *ActionService
+	FunctionBundles *FunctionBundleService
+	Dispatch        *DispatchService
+	Logs            *LogService
 }
 
 // New builds a Client backed by the given *sdk.Client.
 func New(c *sdk.Client) *Client {
 	return &Client{
-		Hooks:    &HookService{c: c},
-		Actions:  &ActionService{c: c},
-		Dispatch: &DispatchService{c: c},
-		Logs:     &LogService{c: c},
+		Hooks:           &HookService{c: c},
+		Actions:         &ActionService{c: c},
+		FunctionBundles: &FunctionBundleService{c: c},
+		Dispatch:        &DispatchService{c: c},
+		Logs:            &LogService{c: c},
 	}
 }
 

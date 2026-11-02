@@ -10,9 +10,9 @@ import (
 	"net/url"
 	"time"
 
+	functionsmodel "go.proteos.ai/model/functions"
 	sdk "go.proteos.ai/sdk"
 	"go.proteos.ai/sdk/internal/httpx"
-	functionsmodel "go.proteos.ai/model/functions"
 )
 
 const logsBasePath = "/functions/v1/logs"
@@ -229,4 +229,3 @@ func perResourceActionOptsToQuery(opts *ListActionLogsOptions, forceFollow bool)
 	}
 	return values.Encode()
 }
-

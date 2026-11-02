@@ -6,10 +6,10 @@ import (
 	"io"
 	"net/http"
 
+	functionsmodel "go.proteos.ai/model/functions"
+	functionsapi "go.proteos.ai/model/functions/api"
 	sdk "go.proteos.ai/sdk"
 	"go.proteos.ai/sdk/internal/httpx"
-	functionsapi "go.proteos.ai/model/functions/api"
-	functionsmodel "go.proteos.ai/model/functions"
 )
 
 const (

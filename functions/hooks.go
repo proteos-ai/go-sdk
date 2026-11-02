@@ -6,9 +6,9 @@ import (
 	"io"
 	"net/http"
 
+	functionsmodel "go.proteos.ai/model/functions"
 	sdk "go.proteos.ai/sdk"
 	"go.proteos.ai/sdk/internal/httpx"
-	functionsmodel "go.proteos.ai/model/functions"
 )
 
 const hooksBasePath = "/functions/v1/hooks"

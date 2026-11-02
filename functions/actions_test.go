@@ -9,10 +9,10 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.proteos.ai/sdk/functions"
 	functionsmodel "go.proteos.ai/model/functions"
 	functionsapi "go.proteos.ai/model/functions/api"
 	metamodel "go.proteos.ai/model/meta"
+	"go.proteos.ai/sdk/functions"
 )
 
 func TestActionService_Get(t *testing.T) {

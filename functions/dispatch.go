@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	sdk "go.proteos.ai/sdk"
 	functionsapi "go.proteos.ai/model/functions/api"
+	sdk "go.proteos.ai/sdk"
 )
 
 // DispatchServiceAPI invokes hook and action dispatch endpoints. Used
