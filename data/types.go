@@ -120,3 +120,28 @@ type PublishContactObservationsOptions struct {
 	Page     int `query:"page"`
 	PageSize int `query:"page_size"`
 }
+
+// Record drafts — proposed record writes awaiting a verdict — are re-exported
+// from go.proteos.ai/model/data so callers share the exact wire shapes.
+
+type RecordDraft = datamodel.RecordDraft
+type RecordDraftItem = datamodel.RecordDraftItem
+type RecordDraftItemResult = datamodel.RecordDraftItemResult
+type RecordDraftChange = datamodel.RecordDraftChange
+type RecordDraftIntent = datamodel.RecordDraftIntent
+type RecordDraftStatus = datamodel.RecordDraftStatus
+type CreateRecordDraftRequest = dataapi.CreateRecordDraftRequest
+type ApproveRecordDraftRequest = dataapi.ApproveRecordDraftRequest
+type RejectRecordDraftRequest = dataapi.RejectRecordDraftRequest
+
+// ListRecordDraftsOptions filters GET /data/v1/record-drafts: Status defaults
+// to proposed on the server (the review queue); RecordId narrows to drafts
+// whose items name that record.
+type ListRecordDraftsOptions struct {
+	Page       int    `query:"page"`
+	PageSize   int    `query:"page_size"`
+	EntitySlug string `query:"entity_slug,omitempty"`
+	Status     string `query:"status,omitempty"`
+	Intent     string `query:"intent,omitempty"`
+	RecordId   string `query:"record_id,omitempty"`
+}

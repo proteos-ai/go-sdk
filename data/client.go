@@ -8,14 +8,16 @@ import sdk "go.proteos.ai/sdk"
 //	d := data.New(c)
 //	rec, err := d.Records.Get(ctx, "customer", "r-1")
 type Client struct {
-	Records *RecordService
-	Queries *QueryService
+	Records      *RecordService
+	Queries      *QueryService
+	RecordDrafts *RecordDraftService
 }
 
 // New builds a Client backed by the given *sdk.Client.
 func New(c *sdk.Client) *Client {
 	return &Client{
-		Records: &RecordService{c: c},
-		Queries: &QueryService{c: c},
+		Records:      &RecordService{c: c},
+		Queries:      &QueryService{c: c},
+		RecordDrafts: &RecordDraftService{c: c},
 	}
 }
