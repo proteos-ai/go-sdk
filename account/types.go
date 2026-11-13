@@ -289,23 +289,28 @@ type Profile struct {
 	DefaultAppSlug string `json:"default_app_slug"`
 	// AppSlugs is the app-switcher allowlist; empty = every app.
 	AppSlugs []string `json:"app_slugs"`
+	// PlatformFeatures is the platform-feature allowlist (areas and
+	// Configuration parts the profile shows); empty = every feature.
+	PlatformFeatures []string `json:"platform_features"`
 }
 
 type CreateProfileRequest struct {
-	Slug           string   `json:"slug"`
-	Name           string   `json:"name"`
-	Description    string   `json:"description,omitempty"`
-	ModuleSlug     string   `json:"module_slug,omitempty"`
-	DefaultAppSlug string   `json:"default_app_slug,omitempty"`
-	AppSlugs       []string `json:"app_slugs,omitempty"`
+	Slug             string   `json:"slug"`
+	Name             string   `json:"name"`
+	Description      string   `json:"description,omitempty"`
+	ModuleSlug       string   `json:"module_slug,omitempty"`
+	DefaultAppSlug   string   `json:"default_app_slug,omitempty"`
+	AppSlugs         []string `json:"app_slugs,omitempty"`
+	PlatformFeatures []string `json:"platform_features,omitempty"`
 }
 
 type UpdateProfileRequest struct {
-	Name           *string   `json:"name,omitempty"`
-	Description    *string   `json:"description,omitempty"`
-	ModuleSlug     *string   `json:"module_slug,omitempty"`
-	DefaultAppSlug *string   `json:"default_app_slug,omitempty"`
-	AppSlugs       *[]string `json:"app_slugs,omitempty"`
+	Name             *string   `json:"name,omitempty"`
+	Description      *string   `json:"description,omitempty"`
+	ModuleSlug       *string   `json:"module_slug,omitempty"`
+	DefaultAppSlug   *string   `json:"default_app_slug,omitempty"`
+	AppSlugs         *[]string `json:"app_slugs,omitempty"`
+	PlatformFeatures *[]string `json:"platform_features,omitempty"`
 }
 
 type ListProfilesOptions struct {
