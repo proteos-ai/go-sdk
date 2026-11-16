@@ -13,6 +13,7 @@ type Client struct {
 	Links       *LinkService
 	Labels      *LabelService
 	RecordLinks *RecordLinkService
+	Spaces      *SpaceService
 }
 
 // New builds a Client backed by the given *sdk.Client.
@@ -22,5 +23,6 @@ func New(c *sdk.Client) *Client {
 		Links:       &LinkService{c: c},
 		Labels:      &LabelService{c: c},
 		RecordLinks: &RecordLinkService{c: c},
+		Spaces:      &SpaceService{c: c},
 	}
 }

@@ -23,6 +23,8 @@ type ListNodesOptions struct {
 	Status        string `query:"status,omitempty"`
 	Title         string `query:"title,omitempty"`
 	TitleContains string `query:"title[contains],omitempty"`
+	// SpaceSlugs keeps only nodes in ANY of these spaces, comma-separated.
+	SpaceSlugs string `query:"space_slugs,omitempty"`
 }
 
 // ListLinksOptions filters and paginates GET /knowledge/v1/links.

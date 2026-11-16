@@ -104,3 +104,17 @@ func TestLabelService_ListPage_Path(t *testing.T) {
 	require.Contains(t, seenURL, "/knowledge/v1/labels?")
 	require.Contains(t, seenURL, "name%5Bcontains%5D=bill")
 }
+
+func TestSpaceService_EnsurePersonal_Path(t *testing.T) {
+	k := newClient(t, func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, http.MethodPost, r.Method)
+		require.Equal(t, "/knowledge/v1/spaces/actions/ensure-personal", r.URL.Path)
+		_ = json.NewEncoder(w).Encode(map[string]any{"slug": "personal-u1", "scope": "personal", "owner_user_id": "u1"})
+	})
+	got, err := k.Spaces.EnsurePersonal(context.Background())
+	require.NoError(t, err)
+	require.Equal(t, "personal-u1", got.Slug)
+	require.Equal(t, "personal", got.Scope)
+	require.NotNil(t, got.OwnerUserId)
+	require.Equal(t, "u1", *got.OwnerUserId)
+}
