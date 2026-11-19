@@ -18,6 +18,8 @@ type ListConnectionsOptions struct {
 	ConnectorKey string `query:"connector_key,omitempty"`
 	Scope        string `query:"scope,omitempty"`
 	Status       string `query:"status,omitempty"`
+	// Owner keeps one user's personal connections: a user id, or "me".
+	Owner string `query:"owner,omitempty"`
 }
 
 // ConnectionServiceAPI is the contract a ConnectionService satisfies.

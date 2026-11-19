@@ -156,8 +156,9 @@ func (s *UserService) CreateApiKey(ctx context.Context, userID string, req Creat
 }
 
 // DeleteApiKey revokes an api key. Other services may keep accepting the key
-// for up to their verification-cache TTL (~60s). Pass "me" as userID to
-// target the calling user.
+// for up to their verification-cache TTL (~60s). Unlike create and list, it
+// also works when the request is authenticated with an api key, so a key can
+// revoke itself. Pass "me" as userID to target the calling user.
 func (s *UserService) DeleteApiKey(ctx context.Context, userID, keyID string) error {
 	return s.c.Do(ctx, http.MethodDelete, usersBasePath+"/"+userID+"/api-keys/"+keyID, nil, nil)
 }
